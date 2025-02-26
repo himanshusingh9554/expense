@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashfree Checkout</title>
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</head>
+<body>
+
+    <h2>Complete Your Payment</h2>
+    <button id="payButton">Pay Now</button>
+
+    <script type="module">
+        document.getElementById("payButton").addEventListener("click", async () => {
+            try {
+                // Fetch order from backend
+                const response = await fetch("https://yourapi.com/api/create-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        amount: 100,  // Replace with dynamic amount
+                        customer_id: "user_123",
+                        customer_name: "John Doe",
+                        customer_email: "johndoe@example.com",
+                        customer_phone: "9876543210"
+                    }),
+                });
+
+                const data = await response.json();
+                if (!data || !data.payment_session_id) {
+                    throw new Error("Failed to get Payment Session ID");
+                }
+
+                // Initialize Cashfree SDK
+                const cashfree = Cashfree({
+                    mode: "sandbox", // Change to "production" for live payments
+                });
+
+                // Open checkout page
+                cashfree.checkout({
+                    paymentSessionId: data.payment_session_id,
+                    redirectTarget: "_self", // Opens in the same tab
+                });
+
+            } catch (error) {
+                console.error("Payment error:", error);
+                alert("Payment initiation failed!");
+            }
+        });
+    </script>
+
+</body>
+</html>

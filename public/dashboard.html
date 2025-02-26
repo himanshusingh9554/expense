@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Expense Tracker</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Expense Tracker</h2>
+      <ul>
+        <li class="active" id="dashboard">Dashboard</li>
+        <li id="reports">Reports</li>
+        <li id="settings">Settings</li>
+        <li id="logout">Logout</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h2>Dashboard</h2>
+        <div class="top-right">
+          <span id="user-greeting"></span>
+          <button id="premium-btn" class="premium-button">Go Premium</button>
+        </div>
+      </div>
+
+      <!-- Balance Overview -->
+      <div class="balance-overview">
+        <div class="box balance">
+          <h3>Total Balance</h3>
+          <p id="total-balance">₹0</p>
+        </div>
+        <div class="box income">
+          <h3>Income</h3>
+          <p id="total-income">₹0</p>
+        </div>
+        <div class="box expense">
+          <h3>Expenses</h3>
+          <p id="total-expense">₹0</p>
+        </div>
+      </div>
+
+      <!-- Add Transaction -->
+      <div class="add-transaction">
+        <h3>Add Transaction</h3>
+        <form id="transaction-form">
+          <input type="text" id="transaction-name" placeholder="Transaction Name" required>
+          <input type="number" id="transaction-amount" placeholder="Amount" required>
+
+          <!-- Type: income or expense -->
+          <select id="transaction-type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+
+          <!-- Category with text values, not numbers -->
+          <select id="transaction-category">
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Rent">Rent</option>
+            <option value="Utilities">Utilities</option>
+          </select>
+
+          <input type="date" id="transaction-date" required> 
+          <button id="add-transaction-btn" type="submit">Add Transaction</button>
+        </form>
+      </div>
+
+      <!-- Transactions List -->
+      <div class="transactions">
+        <h3>Recent Transactions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-list">
+            <!-- Transactions will be added dynamically here -->
+          </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+          <label for="rows-per-page-select">Rows per page:</label>
+          <select id="rows-per-page-select">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+
+          <button id="prev-page-btn">Previous</button>
+          <span id="page-info">Page 1 of 1</span>
+          <button id="next-page-btn">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Transaction</h3>
+      <input type="text" id="edit-transaction-name" placeholder="Transaction Name">
+      <input type="number" id="edit-transaction-amount" placeholder="Amount">
+      <select id="edit-transaction-type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <select id="edit-transaction-category">
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Rent">Rent</option>
+        <option value="Utilities">Utilities</option>
+      </select>
+      <button id="save-edit-btn">Save Changes</button>
+      <button id="close-edit-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

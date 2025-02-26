@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings - Expense Tracker</title>
+  <link rel="stylesheet" href="css/setting.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar (same style as Dashboard/Reports) -->
+    <div class="sidebar">
+      <h2>Expense Tracker</h2>
+      <ul>
+        <li id="dashboard">Dashboard</li>
+        <li id="reports">Reports</li>
+        <li class="active" id="settings">Settings</li>
+        <li id="logout">Logout</li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <h2>Settings</h2>
+        <div class="top-right">
+          <span id="user-greeting"></span>
+          <button id="premium-btn" class="premium-button">Go Premium</button>
+        </div>
+      </div>
+
+      <div class="settings-container">
+        <h2>Update Profile</h2>
+        <div class="section">
+          <div class="profile-pic-container">
+            <img id="profile-pic" src="images/default-avatar.png" alt="Profile Picture" />
+            <label class="profile-pic-label" for="upload-pic">Choose File (Profile Pic)</label>
+            <input type="file" id="upload-pic" accept="image/*" style="display: none;" />
+          </div>
+          <input type="text" id="name" placeholder="Full Name" />
+          <input type="email" id="email" placeholder="Email" />
+          <input type="password" id="password" placeholder="New Password" />
+          <button id="update-profile">Update Profile</button>
+        </div>
+
+        <!-- Appearance Toggle -->
+        <div class="section">
+          <h3>Appearance</h3>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider round"></span>
+          </label>
+          <span>Dark Mode</span>
+        </div>
+
+        <!-- Manage Accounts (example) -->
+        <div class="section">
+          <h3>Manage Accounts</h3>
+          <select id="account-type">
+            <option>Bank</option>
+            <option>Cash</option>
+            <option>Credit Card</option>
+          </select>
+          <input type="text" id="account-name" placeholder="Account Name" />
+          <button id="add-account">Add Account</button>
+          <ul id="account-list"></ul>
+        </div>
+
+        <button id="logout" class="logout-btn">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/setting.js"></script>
+</body>
+</html>

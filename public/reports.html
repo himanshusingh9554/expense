@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reports - Expense Tracker</title>
+  <link rel="stylesheet" href="css/reports.css">
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (same as Dashboard) -->
+        <div class="sidebar">
+          <h2>Expense Tracker</h2>
+          <ul>
+            <li id="dashboard">Dashboard</li>
+            <li class="active" id="reports">Reports</li>
+            <li id="settings">Settings</li>
+            <li id="logout">Logout</li>
+          </ul>
+        </div>
+    
+        <!-- Main Content -->
+        <div class="main-content">
+          <div class="header">
+            <h2>Reports</h2>
+            <div class="top-right">
+              <span id="user-greeting"></span>
+              <button id="premium-btn" class="premium-button">Go Premium</button>
+            </div>
+          </div>
+  <div class="container">
+    <h2>📊 Reports & Analytics</h2>
+
+    <!-- Filter for date range (optional) -->
+    <div class="filters">
+      <label for="date-range">📅 Select Date Range:</label>
+      <input type="date" id="start-date"> to
+      <input type="date" id="end-date">
+      <button id="filter-btn">🔍 Filter</button>
+    </div>
+
+    <!-- Single Chart Box with fixed size to avoid expansions -->
+    <div class="chart-box" style="width: 400px; height: 400px; margin: 0 auto;">
+      <h3>💰 Income vs Expense</h3>
+      <canvas id="income-expense-chart"></canvas>
+    </div>
+  </div>
+  <div class="chart-box" style="width: 600px; height: 400px; margin: 20px auto;">
+    <h3>Another Chart (e.g. Category Breakdown)</h3>
+    <canvas id="second-chart"></canvas>
+  </div>
+
+  <!-- Download Button -->
+  <div style="margin-top: 20px;">
+    <button id="download-btn">Download Expenses</button>
+  </div>
+</div>
+</div>
+</div>
+  <script src="js/reports.js"></script>
+</body>
+</html>

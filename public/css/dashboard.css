@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: #f4f4f4;
+}
+
+.dashboard-container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: #4facfe;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.sidebar ul li:hover,
+.sidebar ul li.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Balance Overview */
+.balance-overview {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.box {
+    flex: 1;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.balance {
+    background: #ff9800;
+}
+
+.income {
+    background: #4caf50;
+}
+
+.expense {
+    background: #f44336;
+}
+
+/* Add Transaction */
+.add-transaction {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.add-transaction input,
+.add-transaction select,
+.add-transaction button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.add-transaction button {
+    background: #4facfe;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Transaction List */
+.transaction-list {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transaction-list th,
+.transaction-list td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-list th {
+    background: #4facfe;
+    color: white;
+}
+
+.transaction-list .delete-btn {
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content input, .modal-content select {
+    margin: 5px 0;
+    padding: 10px;
+    width: 100%;
+}
+
+.modal-content button {
+    margin: 5px 0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.transactions table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.transactions th, .transactions td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.transactions .edit-btn, .transactions .delete-btn {
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.transactions .edit-btn {
+    background-color: orange;
+    color: white;
+}
+
+.transactions .delete-btn {
+    background-color: red;
+    color: white;
+}
+/* Header container styles */
+.header {
+    display: flex;                 /* Use Flexbox */
+    justify-content: space-between;/* Spread out h2 and .top-right */
+    align-items: center;           /* Vertically center them */
+    margin-bottom: 1rem;           /* Space below header */
+  }
+  
+  /* Heading style (optional) */
+  .header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  /* Container for greeting & premium button */
+  .top-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;       /* Spacing between greeting & button */
+    font-size: 16px; /* Adjust text size if desired */
+  }
+  
+  /* Greeting text style */
+  #user-greeting {
+    font-weight: 500;
+    color: #444;
+  }
+  
+  /* Premium button style */
+  .premium-button {
+    background-color: #f57c00; /* Orange color */
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .premium-button:hover {
+    background-color: #fb8c00; /* Slightly darker on hover */
+  }
+  body.dark-mode {
+    background-color: #222;
+    color: #fff;
+  }
+  body.dark-mode {
+    background: #1e1e1e;
+    color: #fff;
+  }
+  
+  /* If you want the main-content dark too */
+  body.dark-mode .main-content {
+    background: #2a2a2a;
+  }
+  
+  /* If your header is white by default, override */
+  body.dark-mode .header {
+    background: #333;
+    color: #fff;
+  }
+  
+  /* Boxes (Total Balance, Income, Expenses) might be bright, so override */
+  body.dark-mode .balance-overview .box {
+    background: #444;
+    color: #fff;
+  }
+  
+  /* Adjust forms, tables, etc. if needed */
+  body.dark-mode input,
+  body.dark-mode select,
+  body.dark-mode button {
+    background: #444;
+    color: #fff;
+    border: 1px solid #666;
+  }
