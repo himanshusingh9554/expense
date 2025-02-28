@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Logout functionality
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
         logoutButton.addEventListener("click", function () {

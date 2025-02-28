@@ -4,7 +4,6 @@ import Category from '../models/category.js';
 
 const router = express.Router();
 
-// ✅ Create a category
 router.post('/', authenticateUser, async (req, res) => {
     try {
         const { name, type } = req.body;
@@ -18,7 +17,6 @@ router.post('/', authenticateUser, async (req, res) => {
     }
 });
 
-// ✅ Get all categories for user
 router.get('/categories', authenticateUser, async (req, res) => {
     try {
         const categories = await Category.findAll({ where: { userId: req.user.id } });

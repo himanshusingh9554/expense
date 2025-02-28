@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/expenses', authenticateUser, createExpense);
 router.get('/expenses', authenticateUser, getExpenses);
-router.put('/expenses/:id', authenticateUser, updateExpense); // Edit Expense
-router.delete('/expenses/:id', authenticateUser, deleteExpense); // Delete Expense
+router.put('/expenses/:id', authenticateUser, updateExpense);
+router.delete('/expenses/:id', authenticateUser, deleteExpense); 
 
 export default router;

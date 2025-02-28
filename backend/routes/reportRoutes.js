@@ -5,13 +5,13 @@ import { Op } from "sequelize";
 import Expense from "../models/expense.js";
 const router = express.Router();
 
-// GET /api/reports?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+
 router.get("/", authenticateUser, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     const userId = req.user.id;
 
-    // Build where condition
+  
     const whereCondition = { userId };
     if (startDate && endDate) {
       whereCondition.date = {
@@ -23,10 +23,10 @@ router.get("/", authenticateUser, async (req, res) => {
       whereCondition.date = { [Op.lte]: endDate };
     }
 
-    // 1) Fetch all transactions/expenses for user within date range
+ 
     const transactions = await Transaction.findAll({ where: whereCondition });
 
-    // 2) Sum up income vs expense
+
     let income = 0;
     let expenses = 0;
     transactions.forEach((tx) => {

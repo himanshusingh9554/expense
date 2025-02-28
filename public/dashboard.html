@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard - Expense Tracker</title>
+  
+  <!-- Cashfree SDK for payment -->
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+
+  <!-- Your Dashboard CSS -->
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
@@ -20,11 +25,15 @@
 
     <!-- Main Content -->
     <div class="main-content">
+      <!-- Header -->
       <div class="header">
         <h2>Dashboard</h2>
         <div class="top-right">
           <span id="user-greeting"></span>
           <button id="premium-btn" class="premium-button">Go Premium</button>
+          <div id="premium-message" style="display: none; font-weight: bold; color: gold; margin-left: 10px;">
+            🎉 Congratulations! You are a Premium Member! 🎉
+          </div>
         </div>
       </div>
 
@@ -104,6 +113,25 @@
           <span id="page-info">Page 1 of 1</span>
           <button id="next-page-btn">Next</button>
         </div>
+      </div>
+
+      <!-- Premium Features (Hidden for non-premium) -->
+      <div id="premium-features" style="display: none; margin-top: 20px;">
+        <h3>Premium Features</h3>
+        
+        <!-- Filter by daily, weekly, monthly -->
+        <div style="margin-bottom: 10px;">
+          <label for="filter-select">Filter by: </label>
+          <select id="filter-select">
+            <option value="all">All</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+
+        <!-- Download button (initially disabled for non-premium) -->
+        <button id="download-btn" disabled>Download Expenses</button>
       </div>
     </div>
   </div>

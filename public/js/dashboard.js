@@ -9,17 +9,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const totalExpenseElement = document.getElementById("total-expense");
 
   // Premium / user info stuff
-  const premiumBanner = document.getElementById("premium-banner");
   const premiumBtn = document.getElementById("premium-btn");
   const logoutBtn = document.getElementById("logout");
   const reportsBtn = document.getElementById("reports");
   const settingsBtn = document.getElementById("settings");
+  const premiumMessageEl = document.getElementById("premium-message");
 
   // Pagination-related
   const rowsPerPageSelect = document.getElementById("rows-per-page-select");
   const nextBtn = document.getElementById("next-page-btn");
   const prevBtn = document.getElementById("prev-page-btn");
   const pageInfoEl = document.getElementById("page-info");
+
+  // Premium features (filter + download)
+  const premiumFeaturesEl = document.getElementById("premium-features"); 
+  const filterSelect = document.getElementById("filter-select");
+  const downloadBtn = document.getElementById("download-btn");
 
   // Load token
   const token = localStorage.getItem("token");
@@ -35,15 +40,47 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.classList.add("dark-mode");
   }
 
-  // Check Payment Status
+  // Check Payment Status from URL
   const params = new URLSearchParams(window.location.search);
   const paymentStatus = params.get("status");
-  if (paymentStatus === "success") {
+  const returnedOrderId = params.get("order_id");
+
+  if (paymentStatus === "success" && returnedOrderId) {
     alert("Transaction successful!");
+    // Call verifyPayment to automatically confirm the payment status from Cashfree
+    verifyPayment(returnedOrderId);
+    // Also call fetchUserName to refresh user data (if you want to do it immediately)
     fetchUserName();
   } else if (paymentStatus === "failed") {
     alert("Transaction failed!");
   }
+  console.log("returnedOrderId:",returnedOrderId)
+  // --- NEW FUNCTION: Verifies payment automatically (no manual Postman needed) ---
+  async function verifyPayment(orderId) {
+    try {
+      const response = await fetch(`http://localhost:5000/api/orders/verifyPayment?order_id=${orderId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const data = await response.json();
+      console.log("verifyPayment response:", data);
+
+      if (data.success) {
+        alert("Payment verified! You are now premium.");
+        // Optionally call fetchUserName() again here if you want
+        // fetchUserName();
+      } else {
+        alert("Payment not verified or failed: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error verifying payment:", err);
+    }
+  }
+  // --- END OF NEW FUNCTION ---
 
   // Sidebar Navigation
   if (logoutBtn) {
@@ -106,9 +143,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       const greetingEl = document.getElementById("user-greeting");
       greetingEl.textContent = `Welcome, ${user.name}!`;
 
+      // If user is premium, show premium features & message
       if (user.premium) {
-        if (premiumBanner) premiumBanner.style.display = "block";
         if (premiumBtn) premiumBtn.style.display = "none";
+        if (premiumMessageEl) premiumMessageEl.style.display = "inline-block";
+
+        if (premiumFeaturesEl) premiumFeaturesEl.style.display = "block";
+        if (downloadBtn) downloadBtn.disabled = false;
+      } else {
+        // Non-premium user
+        if (premiumBtn) premiumBtn.style.display = "inline-block";
+        if (premiumMessageEl) premiumMessageEl.style.display = "none";
+
+        if (premiumFeaturesEl) premiumFeaturesEl.style.display = "none";
+        if (downloadBtn) downloadBtn.disabled = true;
       }
     } catch (error) {
       console.error("Error fetching user name:", error);
@@ -121,7 +169,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!token) {
         alert("Please log in first.");
         return;
-    }
+      }
+      // 1) Create the order on your server
       const response = await fetch("http://localhost:5000/api/orders/create", {
         method: "POST",
         headers: {
@@ -131,25 +180,70 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify({ amount: 499 })
       });
       const data = await response.json();
-      if (!data.success) {
+
+      // 2) Ensure we have a payment_session_id
+      if (!data.success || !data.payment_session_id) {
         throw new Error("Could not create order");
       }
-      window.location.href = data.checkoutUrl;
+
+      // 3) Use the Cashfree v3 SDK to open the checkout
+      const cashfree = Cashfree({ mode: "sandbox" });
+      cashfree.checkout({
+        paymentSessionId: data.payment_session_id,
+        redirectTarget: "_self"
+      });
     } catch (error) {
       console.error("Error creating premium order:", error);
       alert("Failed to start premium purchase");
     }
   }
+
   if (premiumBtn) {
     premiumBtn.addEventListener("click", goPremium);
+  }
+
+  // Filter logic for daily, weekly, monthly (premium only)
+  if (filterSelect) {
+    filterSelect.addEventListener("change", () => {
+      const filterValue = filterSelect.value;
+      currentPage = 1;
+      fetchTransactions(filterValue);
+    });
+  }
+
+  // Download logic for premium users
+  async function downloadExpenses() {
+    try {
+      const response = await fetch("http://localhost:5000/api/expenses/download", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        throw new Error("Failed to download expenses");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "expenses.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error("Error downloading expenses:", error);
+    }
+  }
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", downloadExpenses);
   }
 
   // Transactions
   let transactionsData = [];
 
-  async function fetchTransactions() {
+  // fetchTransactions can accept a filter param (for daily, weekly, monthly)
+  async function fetchTransactions(filter = "all") {
     try {
-      const url = `http://localhost:5000/api/expenses?page=${currentPage}&limit=${rowsPerPage}`;
+      const url = `http://localhost:5000/api/expenses?page=${currentPage}&limit=${rowsPerPage}&filter=${filter}`;
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -245,7 +339,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify({ name, amount, category, type, date })
       });
       if (!response.ok) throw new Error("Failed to add transaction");
-      fetchTransactions();
+      if (filterSelect) {
+        fetchTransactions(filterSelect.value);
+      } else {
+        fetchTransactions();
+      }
     } catch (error) {
       console.error("Error adding transaction:", error);
     }
@@ -259,7 +357,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) throw new Error("Failed to delete transaction");
-      fetchTransactions();
+      if (filterSelect) {
+        fetchTransactions(filterSelect.value);
+      } else {
+        fetchTransactions();
+      }
     } catch (error) {
       console.error("Error deleting transaction:", error);
     }
@@ -310,7 +412,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         if (!response.ok) throw new Error("Failed to update transaction");
         modal.style.display = "none";
-        fetchTransactions();
+        if (filterSelect) {
+          fetchTransactions(filterSelect.value);
+        } else {
+          fetchTransactions();
+        }
       } catch (error) {
         console.error("Error updating transaction:", error);
       }
@@ -321,7 +427,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // initial calls
+  // Initial calls
   fetchUserName();
   fetchTransactions();
 });

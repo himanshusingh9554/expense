@@ -4,7 +4,6 @@ import Transaction from '../models/transaction.js'
 
 const router = express.Router();
 
-// ✅ Create a transaction (Expense/Income)
 router.post('/transactions', authenticateUser, async (req, res) => {
     try {
         const {name, amount, categoryId, type, description, date  } = req.body;
@@ -31,7 +30,6 @@ router.post('/transactions', authenticateUser, async (req, res) => {
     }
 });
 
-// ✅ Fetch transactions for the logged-in user
 router.get('/transactions', authenticateUser, async (req, res) => {
     try {
         const transactions = await Transaction.findAll({ where: { userId: req.user.id } });
@@ -56,7 +54,7 @@ router.delete('/transactions/:id', authenticateUser, async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
-// PUT /transactions/:id
+
 router.put('/transactions/:id', authenticateUser, async (req, res) => {
     try {
       const { id } = req.params;
@@ -78,9 +76,6 @@ router.put('/transactions/:id', authenticateUser, async (req, res) => {
       res.status(500).json({ error: "Internal Server Error", message: error.message });
     }
   });
-  // routes/transactionRoutes.js
 
-  
-  
 
 export default router;
