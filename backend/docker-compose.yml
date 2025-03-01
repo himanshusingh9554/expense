@@ -3,9 +3,9 @@ version: "3.8"
 services:
   db:
     image: mysql:8
-    container_name: my-mysql
+    # No container_name to avoid potential conflicts on some platforms
     environment:
-     
+      # Root user credentials come from environment variables
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
     healthcheck:
@@ -13,22 +13,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    # For local dev, you can connect to MySQL on localhost:3307
     ports:
       - "3307:3306"
- 
+    # No volumes => ephemeral data
     networks:
       - app-net
 
   app:
     build: .
-    container_name: my-node-app
-
+    # No container_name
     ports:
       - "3000:3000"
-
     environment:
-     
-      DB_HOST: db        
+      DB_HOST: db
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
@@ -41,10 +39,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
     networks:
       - app-net
-
 
 networks:
   app-net:
