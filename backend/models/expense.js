@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import  sequelize  from '../config/database.js'; // Ensure correct import path
+import  sequelize  from '../config/database.js'; 
 
 const Expense = sequelize.define('Expense', {
     id: {

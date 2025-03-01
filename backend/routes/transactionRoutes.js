@@ -43,7 +43,7 @@ router.get('/transactions', authenticateUser, async (req, res) => {
 router.delete('/transactions/:id', authenticateUser, async (req, res) => {
     try {
       const { id } = req.params;
-      const userId = req.user.id; // from token
+      const userId = req.user.id; 
       const transaction = await Transaction.findByPk(id);
       if (!transaction || transaction.userId !== userId) {
         return res.status(404).json({ message: 'Transaction not found' });

@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
         const a = document.createElement("a");
         a.href = blobUrl;
-        a.download = "expenses.csv"; // file name
+        a.download = "expenses.csv"; 
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -183,8 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error downloading expenses:", error);
       }
     }
-  
-    // Initial fetch with no date range
     fetchReports();
   });
   

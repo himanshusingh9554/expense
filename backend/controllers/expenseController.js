@@ -1,6 +1,5 @@
 import Expense from "../models/expense.js"
 
-// ✅ Create Expense
 export const createExpense = async (req, res) => {
     try {
         const { name,amount, category, type, date } = req.body;
@@ -18,31 +17,26 @@ export const createExpense = async (req, res) => {
     }
 };
 
-// ✅ Get Expenses
 export const getExpenses = async (req, res) => {
     try {
-      // 1) Read page & limit from query; defaults if missing
+    
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const offset = (page - 1) * limit;
-  
-      // 2) Count total expenses for this user
+
       const totalCount = await Expense.count({
         where: { userId: req.user.id }
       });
-  
-      // 3) Fetch expenses with offset & limit
+
       const expenses = await Expense.findAll({
         where: { userId: req.user.id },
         offset,
         limit,
         order: [['createdAt', 'DESC']]
       });
-  
-      // 4) Calculate total pages
+
       const totalPages = Math.ceil(totalCount / limit);
   
-      // 5) Return the data + pagination info
       res.json({
         success: true,
         data: expenses,
@@ -57,8 +51,6 @@ export const getExpenses = async (req, res) => {
     }
   };
   
-
-// ✅ Update Expense (Edit)
 export const updateExpense = async (req, res) => {
     try {
         const { id } = req.params;
@@ -83,7 +75,6 @@ export const updateExpense = async (req, res) => {
     }
 };
 
-// ✅ Delete Expense
 export const deleteExpense = async (req, res) => {
     try {
         const { id } = req.params;

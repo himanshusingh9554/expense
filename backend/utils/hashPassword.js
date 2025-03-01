@@ -1,4 +1,4 @@
-// utils/hashPassword.js
+
 import bcrypt from 'bcrypt';
 
 export const hashPassword = async (password) => {

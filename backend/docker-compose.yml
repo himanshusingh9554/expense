@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8
+    container_name: my-mysql
+    environment:
+     
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-net
+
+  app:
+    build: .
+    container_name: my-node-app
+
+    ports:
+      - "3000:3000"
+
+    environment:
+     
+      DB_HOST: db        
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_DIALECT: mysql
+
+      CF_CLIENT_ID: ${CF_CLIENT_ID}
+      CF_CLIENT_SECRET: ${CF_CLIENT_SECRET}
+      CF_MODE: ${CF_MODE}
+      PORT: ${PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - app-net
+
+volumes:
+  mysql_data:
+
+networks:
+  app-net:

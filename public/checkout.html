@@ -14,22 +14,19 @@
     <script type="module">
         document.getElementById("payButton").addEventListener("click", async () => {
             try {
-                // Retrieve token from localStorage
                 const token = localStorage.getItem("token");
                 if (!token) {
                   alert("Please log in first.");
                   return;
                 }
-    
-                // Fetch order from backend with proper authentication and correct URL
                 const response = await fetch("http://localhost:5000/api/orders/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`  // Authorization header added
+                        "Authorization": `Bearer ${token}` 
                     },
                     body: JSON.stringify({
-                        amount: 499,  // Replace with dynamic amount
+                        amount: 499,  
                         customer_id: "user_123",
                         customer_name: "test",
                         customer_email: "test@gmail.com",
@@ -42,15 +39,15 @@
                     throw new Error("Failed to get Payment Session ID");
                 }
     
-                // Initialize Cashfree SDK
+                
                 const cashfree = Cashfree({
-                    mode: "sandbox", // Change to "production" for live payments
+                    mode: "sandbox",
                 });
     
-                // Open checkout page
+                
                 cashfree.checkout({
                     paymentSessionId: data.payment_session_id,
-                    redirectTarget: "_self", // Opens in the same tab
+                    redirectTarget: "_self", 
                 });
     
             } catch (error) {

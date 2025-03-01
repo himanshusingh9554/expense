@@ -3,11 +3,15 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false, // Disable logging for clean output
+const host = process.env.DB_HOST || "localhost";
+const user = process.env.DB_USER || "root";
+const pass = process.env.DB_PASS || "rootnode";
+const dbName = process.env.DB_NAME || "expense";
+
+const sequelize = new Sequelize(dbName, user, pass, {
+  host: host,
+  dialect: process.env.DB_DIALECT || "mysql",
+  port: 3306, 
 });
 (async () => {
     try {

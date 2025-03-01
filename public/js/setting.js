@@ -1,12 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    // If user is not logged in, redirect to login
+  
     window.location.href = "index.html";
     return;
   }
 
-  // ----------------- Sidebar Navigation -----------------
   const dashboardBtn = document.getElementById("dashboard");
   const reportsBtn = document.getElementById("reports");
   const settingsBtn = document.getElementById("settings");
@@ -32,8 +31,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "index.html";
     });
   }
-
-  // If you want to greet the user:
   const greetingEl = document.getElementById("user-greeting");
   if (greetingEl) {
     try {
@@ -49,9 +46,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // ----------------- Dark Mode Toggle -----------------
   const themeToggle = document.getElementById("theme-toggle");
-  // Check localStorage
+
   const savedDarkMode = localStorage.getItem("darkMode");
   if (savedDarkMode === "true") {
     document.body.classList.add("dark-mode");
@@ -70,16 +66,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ----------------- Profile Update Logic -----------------
   const updateProfileBtn = document.getElementById("update-profile");
   if (updateProfileBtn) {
     updateProfileBtn.addEventListener("click", async () => {
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
-      const newPassword = document.getElementById("password").value; // If you want to handle password
-
+      const newPassword = document.getElementById("password").value; 
       try {
-        // If your backend route for updating user is /api/user:
         const response = await fetch("http://localhost:5000/api/user", {
           method: "PUT",
           headers: {
@@ -98,7 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ----------------- File Input (profile pic) -----------------
   const uploadPicInput = document.getElementById("upload-pic");
   const profilePic = document.getElementById("profile-pic");
   const labelForPic = document.querySelector(".profile-pic-label");
@@ -119,7 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ----------------- Manage Accounts (example) -----------------
   const addAccountBtn = document.getElementById("add-account");
   if (addAccountBtn) {
     addAccountBtn.addEventListener("click", () => {
@@ -129,14 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Enter an account name");
         return;
       }
-      // Example: Add to a local <ul> for display
+
       const accountList = document.getElementById("account-list");
       const li = document.createElement("li");
       li.textContent = `${accountType}: ${accountName}`;
       accountList.appendChild(li);
-
-      // Optionally send to server if you have an endpoint...
-      // fetch("/api/accounts", { method: "POST", ... });
     });
   }
 });

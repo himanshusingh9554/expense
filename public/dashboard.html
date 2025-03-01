@@ -3,16 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard - Expense Tracker</title>
-  
-  <!-- Cashfree SDK for payment -->
   <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
-
-  <!-- Your Dashboard CSS -->
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <div class="sidebar">
       <h2>Expense Tracker</h2>
       <ul>
@@ -22,10 +17,7 @@
         <li id="logout">Logout</li>
       </ul>
     </div>
-
-    <!-- Main Content -->
     <div class="main-content">
-      <!-- Header -->
       <div class="header">
         <h2>Dashboard</h2>
         <div class="top-right">
@@ -36,8 +28,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Balance Overview -->
       <div class="balance-overview">
         <div class="box balance">
           <h3>Total Balance</h3>
@@ -52,21 +42,15 @@
           <p id="total-expense">₹0</p>
         </div>
       </div>
-
-      <!-- Add Transaction -->
       <div class="add-transaction">
         <h3>Add Transaction</h3>
         <form id="transaction-form">
           <input type="text" id="transaction-name" placeholder="Transaction Name" required>
           <input type="number" id="transaction-amount" placeholder="Amount" required>
-
-          <!-- Type: income or expense -->
           <select id="transaction-type">
             <option value="income">Income</option>
             <option value="expense">Expense</option>
           </select>
-
-          <!-- Category with text values, not numbers -->
           <select id="transaction-category">
             <option value="Food">Food</option>
             <option value="Transport">Transport</option>
@@ -79,8 +63,6 @@
           <button id="add-transaction-btn" type="submit">Add Transaction</button>
         </form>
       </div>
-
-      <!-- Transactions List -->
       <div class="transactions">
         <h3>Recent Transactions</h3>
         <table>
@@ -94,11 +76,8 @@
             </tr>
           </thead>
           <tbody id="transactions-list">
-            <!-- Transactions will be added dynamically here -->
           </tbody>
         </table>
-
-        <!-- Pagination Controls -->
         <div class="pagination-controls">
           <label for="rows-per-page-select">Rows per page:</label>
           <select id="rows-per-page-select">
@@ -114,12 +93,8 @@
           <button id="next-page-btn">Next</button>
         </div>
       </div>
-
-      <!-- Premium Features (Hidden for non-premium) -->
       <div id="premium-features" style="display: none; margin-top: 20px;">
         <h3>Premium Features</h3>
-        
-        <!-- Filter by daily, weekly, monthly -->
         <div style="margin-bottom: 10px;">
           <label for="filter-select">Filter by: </label>
           <select id="filter-select">
@@ -129,14 +104,10 @@
             <option value="monthly">Monthly</option>
           </select>
         </div>
-
-        <!-- Download button (initially disabled for non-premium) -->
         <button id="download-btn" disabled>Download Expenses</button>
       </div>
     </div>
   </div>
-
-  <!-- Edit Modal -->
   <div id="edit-modal" class="modal">
     <div class="modal-content">
       <h3>Edit Transaction</h3>
@@ -157,8 +128,6 @@
       <button id="close-edit-btn">Cancel</button>
     </div>
   </div>
-
-  <!-- Main JavaScript -->
   <script src="js/dashboard.js"></script>
 </body>
 </html>

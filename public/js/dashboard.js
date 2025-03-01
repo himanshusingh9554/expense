@@ -1,32 +1,21 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("Dashboard JS Loaded");
-
-  // DOM Elements
   const transactionsList = document.getElementById("transactions-list");
   const addTransactionBtn = document.getElementById("add-transaction-btn");
   const totalBalanceElement = document.getElementById("total-balance");
   const totalIncomeElement = document.getElementById("total-income");
   const totalExpenseElement = document.getElementById("total-expense");
-
-  // Premium / user info stuff
   const premiumBtn = document.getElementById("premium-btn");
   const logoutBtn = document.getElementById("logout");
   const reportsBtn = document.getElementById("reports");
   const settingsBtn = document.getElementById("settings");
   const premiumMessageEl = document.getElementById("premium-message");
-
-  // Pagination-related
   const rowsPerPageSelect = document.getElementById("rows-per-page-select");
   const nextBtn = document.getElementById("next-page-btn");
   const prevBtn = document.getElementById("prev-page-btn");
   const pageInfoEl = document.getElementById("page-info");
-
-  // Premium features (filter + download)
   const premiumFeaturesEl = document.getElementById("premium-features"); 
   const filterSelect = document.getElementById("filter-select");
   const downloadBtn = document.getElementById("download-btn");
-
-  // Load token
   const token = localStorage.getItem("token");
   console.log("Token from localStorage:", token);
   if (!token) {
@@ -34,28 +23,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Check Dark Mode
   const savedDarkMode = localStorage.getItem("darkMode");
   if (savedDarkMode === "true") {
     document.body.classList.add("dark-mode");
   }
 
-  // Check Payment Status from URL
   const params = new URLSearchParams(window.location.search);
   const paymentStatus = params.get("status");
   const returnedOrderId = params.get("order_id");
 
   if (paymentStatus === "success" && returnedOrderId) {
     alert("Transaction successful!");
-    // Call verifyPayment to automatically confirm the payment status from Cashfree
+  
     verifyPayment(returnedOrderId);
-    // Also call fetchUserName to refresh user data (if you want to do it immediately)
+
     fetchUserName();
   } else if (paymentStatus === "failed") {
     alert("Transaction failed!");
   }
   console.log("returnedOrderId:",returnedOrderId)
-  // --- NEW FUNCTION: Verifies payment automatically (no manual Postman needed) ---
   async function verifyPayment(orderId) {
     try {
       const response = await fetch(`http://localhost:5000/api/orders/verifyPayment?order_id=${orderId}`,
@@ -71,8 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (data.success) {
         alert("Payment verified! You are now premium.");
-        // Optionally call fetchUserName() again here if you want
-        // fetchUserName();
+ 
       } else {
         alert("Payment not verified or failed: " + data.message);
       }
@@ -80,9 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error verifying payment:", err);
     }
   }
-  // --- END OF NEW FUNCTION ---
-
-  // Sidebar Navigation
+ 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("token");
@@ -100,7 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Pagination
   let currentPage = 1;
   let rowsPerPage = parseInt(localStorage.getItem("rowsPerPage")) || 10;
 
@@ -128,7 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Fetch user info
   async function fetchUserName() {
     try {
       const response = await fetch("http://localhost:5000/api/user", {
@@ -141,9 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("User info:", user);
 
       const greetingEl = document.getElementById("user-greeting");
-      greetingEl.textContent = `Welcome, ${user.name}!`;
-
-      // If user is premium, show premium features & message
+      greetingEl.textContent = `Welcome, ${user.name}`;
       if (user.premium) {
         if (premiumBtn) premiumBtn.style.display = "none";
         if (premiumMessageEl) premiumMessageEl.style.display = "inline-block";
@@ -151,7 +130,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (premiumFeaturesEl) premiumFeaturesEl.style.display = "block";
         if (downloadBtn) downloadBtn.disabled = false;
       } else {
-        // Non-premium user
         if (premiumBtn) premiumBtn.style.display = "inline-block";
         if (premiumMessageEl) premiumMessageEl.style.display = "none";
 
@@ -163,14 +141,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Premium purchase
+  
   async function goPremium() {
     try {
       if (!token) {
         alert("Please log in first.");
         return;
       }
-      // 1) Create the order on your server
+    
       const response = await fetch("http://localhost:5000/api/orders/create", {
         method: "POST",
         headers: {
@@ -181,12 +159,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const data = await response.json();
 
-      // 2) Ensure we have a payment_session_id
       if (!data.success || !data.payment_session_id) {
         throw new Error("Could not create order");
       }
 
-      // 3) Use the Cashfree v3 SDK to open the checkout
       const cashfree = Cashfree({ mode: "sandbox" });
       cashfree.checkout({
         paymentSessionId: data.payment_session_id,
@@ -201,8 +177,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (premiumBtn) {
     premiumBtn.addEventListener("click", goPremium);
   }
-
-  // Filter logic for daily, weekly, monthly (premium only)
   if (filterSelect) {
     filterSelect.addEventListener("change", () => {
       const filterValue = filterSelect.value;
@@ -211,7 +185,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Download logic for premium users
   async function downloadExpenses() {
     try {
       const response = await fetch("http://localhost:5000/api/expenses/download", {
@@ -237,10 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     downloadBtn.addEventListener("click", downloadExpenses);
   }
 
-  // Transactions
   let transactionsData = [];
-
-  // fetchTransactions can accept a filter param (for daily, weekly, monthly)
   async function fetchTransactions(filter = "all") {
     try {
       const url = `http://localhost:5000/api/expenses?page=${currentPage}&limit=${rowsPerPage}&filter=${filter}`;
@@ -381,11 +351,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("edit-transaction-amount").value = transaction.amount;
     document.getElementById("edit-transaction-type").value = transaction.type;
     document.getElementById("edit-transaction-category").value = transaction.category;
-
     const saveBtn = document.getElementById("save-edit-btn");
     const closeBtn = document.getElementById("close-edit-btn");
-
-    // Remove old listeners
     saveBtn.replaceWith(saveBtn.cloneNode(true));
     const newSaveBtn = document.getElementById("save-edit-btn");
 
@@ -426,8 +393,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       modal.style.display = "none";
     });
   }
-
-  // Initial calls
   fetchUserName();
   fetchTransactions();
 });

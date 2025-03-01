@@ -31,24 +31,24 @@ router.post('/create', authenticateUser, async (req, res) => {
       order_currency: 'INR',
       customer_details: {
         customer_id: userId,
-        customer_name: 'test',            // Replace with real name from DB if desired
-        customer_email: 'test@gmail.com', // Replace with real email
-        customer_phone: '9876543210'      // Replace with real phone
+        customer_name: 'test',            
+        customer_email: 'test@gmail.com',
+        customer_phone: '9876543210'      
       },
       order_note: 'Premium Purchase',
       order_meta: {
-        // After payment, Cashfree will redirect the user to this URL
+      
         return_url: "http://localhost:5000/dashboard.html?status=success&order_id={order_id}",
-        // Cashfree will POST payment result to this callback (needs public URL or ngrok)
+       
         notify_url: "http://localhost:5000/api/orders/callback"
       }
     };
 
-    // 4. Create the order via Cashfree PG
+   
     const version = '2023-08-01';
     const createResponse = await Cashfree.PGCreateOrder(version, orderRequest);
 
-    // 5. Validate the response
+   
     if (!createResponse || !createResponse.data) {
       console.error('Cashfree create order error:', createResponse);
       return res.status(400).json({
@@ -57,15 +57,14 @@ router.post('/create', authenticateUser, async (req, res) => {
       });
     }
 
-    // 6. Cashfree returns "order_id" (the one that starts with "order_...") 
-    //    and "payment_session_id"
+   
     const { order_id, payment_session_id } = createResponse.data;
 
     console.log('Cashfree response data:', createResponse.data);
     console.log('order_id:', order_id);
     console.log('payment_session_id:', payment_session_id);
 
-    // 7. Make sure we have both
+   
     if (!order_id || !payment_session_id) {
       console.error('Missing order_id/payment_session_id:', createResponse.data);
       return res.status(400).json({
@@ -74,24 +73,22 @@ router.post('/create', authenticateUser, async (req, res) => {
       });
     }
 
-    // 8. Store the "order_id" in the DB so we can match it in the callback
+  
     const newOrder = await Order.create({
       userId,
       amount,
       status: 'PENDING',
-      // Store "order_id" in cfOrderId 
-      // (despite the name, it should hold the string "order_...")
       cfOrderId: order_id,         
       paymentSessionId: payment_session_id
     });
 
-    // 9. Return data to the frontend
+    
     return res.json({
       success: true,
       message: 'Order created successfully',
-      order_id,               // for reference
-      payment_session_id,     // used by Cashfree checkout
-      dbOrderId: newOrder.id  // internal DB ID
+      order_id,               
+      payment_session_id,
+      dbOrderId: newOrder.id  
     });
 
   } catch (error) {
@@ -109,10 +106,8 @@ router.get('/verifyPayment', authenticateUser, async (req, res) => {
     if (!order_id) {
       return res.status(400).json({ success: false, message: 'Missing order_id' });
     }
-
-    // Use whichever version your library actually supports
-    const version = '2022-09-01'; // or "2023-08-01"
-    // If your library uses PGFetchOrder instead of PGGetOrderDetails, call that
+    const version = '2022-09-01';
+   
     const orderDetailsResponse = await Cashfree.PGFetchOrder(version, order_id);
 
     if (!orderDetailsResponse || !orderDetailsResponse.data) {
@@ -122,7 +117,7 @@ router.get('/verifyPayment', authenticateUser, async (req, res) => {
     const { order_status } = orderDetailsResponse.data;
     console.log('verifyPayment -> order_status:', order_status);
 
-    // If paid, mark DB order + user premium
+   
     if (order_status === 'PAID') {
       const order = await Order.findOne({ where: { cfOrderId: order_id } });
       if (!order) {
@@ -152,28 +147,18 @@ router.get('/verifyPayment', authenticateUser, async (req, res) => {
 
 router.post('/callback', async (req, res) => {
   try {
-    // 1. See if we actually receive the callback
     console.log('Cashfree Callback:', req.body);
-
-    // Cashfree typically sends { order_id: "...", order_status: "PAID" or "FAILED", ... }
     const { order_id, order_status } = req.body;
     console.log('order_id from callback:', order_id);
     console.log('order_status from callback:', order_status);
-
-    // 2. Find the matching order in your DB by "order_id"
-    //    because we stored "order_id" in cfOrderId
     const order = await Order.findOne({ where: { cfOrderId: order_id } });
     if (!order) {
       console.error('Order not found:', order_id);
       return res.status(404).json({ error: 'Order not found' });
     }
-
-    // 3. Update the order status & user premium if payment is successful
     if (order_status === 'PAID') {
       order.status = 'SUCCESSFUL';
       await order.save();
-
-      // Mark user as premium
       const user = await User.findByPk(order.userId);
       if (user) {
         user.premium = true;
@@ -182,7 +167,6 @@ router.post('/callback', async (req, res) => {
 
       return res.json({ success: true, message: 'Transaction successful' });
     } else {
-      // If payment failed
       order.status = 'FAILED';
       await order.save();
       return res.json({ success: false, message: 'Transaction failed' });

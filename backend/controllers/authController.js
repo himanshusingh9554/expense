@@ -36,15 +36,11 @@ export const login = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    // 1) Check if user exists
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    // 2) Generate a token (32 bytes hex string)
     const resetToken = crypto.randomBytes(32).toString('hex');
-    // 3) Set expiry (e.g. 1 hour from now)
     const expiry = new Date(Date.now() + 60 * 60 * 1000);
 user.resetTokenExpiry = expiry;
 
@@ -52,27 +48,16 @@ user.resetTokenExpiry = expiry;
     user.resetTokenExpiry = expiry;
     await user.save();
 
-    // 4) Construct the reset link
     const resetLink = `http://localhost:5000/reset-password.html?token=${resetToken}`;
-
-    // 5) Send the email
     const subject = 'Password Reset';
     const text = `You requested a password reset. Click here to reset:\n\n${resetLink}\n\nThis link is valid for 1 hour.`;
-
-    // Log the reset link for debugging
     console.log('Reset Link:', resetLink);
-
-    // Send the email, capture sendMail info for debugging
     const info = await sendEmail(user.email, subject, text);
-
-    // Log the sendMail result (contains messageId, etc.)
     console.log('Nodemailer sendMail info:', info);
-
-    // Return success + reset link in response (optional for local debugging)
     res.json({
       message: 'Password reset link sent to your email',
-      resetLink,  // for local debugging
-      mailInfo: info  // optional if you want to see details
+      resetLink,  
+      mailInfo: info 
     });
   } catch (error) {
     console.error('Forgot password error:', error);
@@ -82,26 +67,19 @@ user.resetTokenExpiry = expiry;
   export const resetPassword = async (req, res) => {
     try {
       const { token, newPassword } = req.body;
-  
-      // 1) Find user with matching token & check if not expired
       const user = await User.findOne({
         where: {
           resetToken: token,
-          resetTokenExpiry: { [Op.gt]: new Date() } // user token not expired
+          resetTokenExpiry: { [Op.gt]: new Date() }
         }
       });
   
       if (!user) {
         return res.status(400).json({ error: 'Invalid or expired token' });
       }
-  
-      // 2) Update user password (hash it!)
-      // For demo, let's do a quick hash
-     
       const hashed = await bcrypt.hash(newPassword, 10);
       user.password = hashed;
   
-      // 3) Clear the reset fields
       user.resetToken = null;
       user.resetTokenExpiry = null;
       await user.save();

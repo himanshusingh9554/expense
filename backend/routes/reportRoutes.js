@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateUser } from "../middleware/authMiddleware.js";
-import Transaction from "../models/transaction.js"; // or Expense, if you store all in Expense
+import Transaction from "../models/transaction.js";
 import { Op } from "sequelize";
 import Expense from "../models/expense.js";
 const router = express.Router();

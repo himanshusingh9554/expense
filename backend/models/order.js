@@ -20,12 +20,12 @@ const Order = sequelize.define('Order', {
     type: DataTypes.ENUM('PENDING', 'SUCCESSFUL', 'FAILED'),
     defaultValue: 'PENDING'
   },
-  cfOrderId: {  // New field: Cashfree Order ID
+  cfOrderId: {  
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  paymentSessionId: {  // New field: Payment Session ID
+  paymentSessionId: {  
     type: DataTypes.STRING,
     allowNull: false,
   }
