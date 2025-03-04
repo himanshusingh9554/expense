@@ -52,7 +52,7 @@ app.use("/api/reports", reportRoutes);
 app.use('/api', userRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname)));
 
 app.use('/api/categories', categoryRoutes);
 sequelize.sync({ force: false})

@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const filterSelect = document.getElementById("filter-select");
   const downloadBtn = document.getElementById("download-btn");
 
-  // We will store the fetched user object here
+
   let currentUser = null;
 
-  // 1) Check token
+
   const token = localStorage.getItem("token");
   console.log("Token from localStorage:", token);
   if (!token) {
@@ -28,13 +28,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 2) Dark mode
   const savedDarkMode = localStorage.getItem("darkMode");
   if (savedDarkMode === "true") {
     document.body.classList.add("dark-mode");
   }
 
-  // 3) Payment status checks
   const params = new URLSearchParams(window.location.search);
   const paymentStatus = params.get("status");
   const returnedOrderId = params.get("order_id");
@@ -72,7 +70,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 4) Sidebar Navigation
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("token");
@@ -80,14 +77,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // *** IMPORTANT: Prevent non-premium user from accessing reports page
   if (reportsBtn) {
     reportsBtn.addEventListener("click", () => {
       if (!currentUser || !currentUser.premium) {
         alert("You need to be a Premium user to access the Reports page. Please buy Premium!");
         return;
       }
-      // If premium, proceed
+
       window.location.href = "reports.html";
     });
   }
@@ -98,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 5) Pagination Variables
+
   let currentPage = 1;
   let rowsPerPage = parseInt(localStorage.getItem("rowsPerPage")) || 10;
 
@@ -127,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 6) Fetch user info
+
   async function fetchUserName() {
     try {
       const response = await fetch("http://localhost:5000/api/user", {
@@ -137,14 +133,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Failed to fetch user info");
       }
       const user = await response.json();
-      currentUser = user;  // Store the user object
+      currentUser = user; 
 
       console.log("User info:", user);
 
       const greetingEl = document.getElementById("user-greeting");
       greetingEl.textContent = `Welcome, ${user.name}`;
 
-      // If premium, show/hide certain elements
+    
       if (user.premium) {
         if (premiumBtn) premiumBtn.style.display = "none";
         if (premiumMessageEl) premiumMessageEl.style.display = "inline-block";
@@ -161,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 7) Premium Purchase
+ 
   async function goPremium() {
     try {
       if (!token) {
@@ -179,16 +175,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const data = await response.json();
 
-      // If using Cashfree Hosted Checkout in the new approach, you might get `payment_session_id`.
-      // But if you're returning a `checkoutUrl` from your server, you'd do a redirect.
-      // This example shows a "payment_session_id" approach:
-
       if (!data.success || !data.payment_session_id) {
         throw new Error("Could not create order");
       }
 
-      // The new approach (Hosted Checkout v3):
-      // We assume you've included <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script> in your HTML
       const cashfree = Cashfree({ mode: "sandbox" });
       cashfree.checkout({
         paymentSessionId: data.payment_session_id,
@@ -204,7 +194,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     premiumBtn.addEventListener("click", goPremium);
   }
 
-  // 8) Download CSV (only for premium)
   async function downloadExpenses() {
     try {
       const response = await fetch("http://localhost:5000/api/expenses/download", {
@@ -230,7 +219,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     downloadBtn.addEventListener("click", downloadExpenses);
   }
 
-  // 9) Fetch Transactions
   let transactionsData = [];
   async function fetchTransactions(filter = "all") {
     try {
@@ -304,7 +292,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 10) Add Transaction
   if (addTransactionBtn) {
     addTransactionBtn.addEventListener("click", addTransaction);
   }
@@ -341,7 +328,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 11) Delete Transaction
   async function deleteTransaction(event) {
     const transactionId = event.target.dataset.id;
     try {
@@ -360,7 +346,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 12) Edit Transaction
   function editTransaction(event) {
     const transactionId = event.target.dataset.id;
     const transaction = transactionsData.find(t => t.id === transactionId);
@@ -418,7 +403,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 13) Initial Calls
   fetchUserName();
   fetchTransactions();
 });

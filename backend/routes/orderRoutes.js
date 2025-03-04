@@ -15,10 +15,6 @@ if (process.env.CF_MODE === 'PROD') {
   Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
 }
 
-// ====================================================================
-// POST /api/orders/create
-// Creates a new order in Cashfree PG v3, returns payment_session_id
-// ====================================================================
 router.post('/create', authenticateUser, async (req, res) => {
   try {
     // 2. The user who is purchasing

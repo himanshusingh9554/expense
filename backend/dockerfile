@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the code
 COPY . .
 
-# Expose the port (optional for Docker alone; required if you want to run outside of compose)
+
 EXPOSE 3000
 
-# Define the command to start your app
+
 CMD ["npm", "start"]
