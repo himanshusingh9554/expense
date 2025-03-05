@@ -33,10 +33,10 @@ router.post('/create', authenticateUser, async (req, res) => {
       },
       order_note: 'Premium Purchase',
       order_meta: {
-      
-        return_url: "http://localhost:5000/dashboard.html?status=success&order_id={order_id}",
-       
-        notify_url: "http://localhost:5000/api/orders/callback"
+      //13.235.74.23:http://localhost:5000/dashboard.html?status=success&order_id={order_id}
+        return_url: "http://13.235.74.23/dashboard.html?status=success&order_id={order_id}",
+       //http://localhost:5000/api/orders/callback
+        notify_url: "http://13.235.74.23/api/orders/callback"
       }
     };
 
@@ -102,7 +102,7 @@ router.get('/verifyPayment', authenticateUser, async (req, res) => {
     if (!order_id) {
       return res.status(400).json({ success: false, message: 'Missing order_id' });
     }
-    const version = '2022-09-01';
+    const version = '2023-08-01';
    
     const orderDetailsResponse = await Cashfree.PGFetchOrder(version, order_id);
 

@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   const greetingEl = document.getElementById("user-greeting");
   if (greetingEl) {
-    try {
-      const response = await fetch("http://localhost:5000/api/user", {
+    try {//13.235.74.23:http://localhost:5000/api/user
+      const response = await fetch("http://13.235.74.23/api/user", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const newPassword = document.getElementById("password").value; 
-      try {
-        const response = await fetch("http://localhost:5000/api/user", {
+      try {//13.235.74.23:http://localhost:5000/api/user
+        const response = await fetch("http://13.235.74.23/api/user", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

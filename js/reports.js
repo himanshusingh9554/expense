@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let secondChart = null;
 
     async function fetchReports(startDate = "", endDate = "") {
-      try {
-        let url = "http://localhost:5000/api/reports";
+      try {//13.235.74.23:http://localhost:5000/api/reports
+        let url = "http://13.235.74.23/api/reports";
         const params = [];
         if (startDate) params.push(`startDate=${startDate}`);
         if (endDate) params.push(`endDate=${endDate}`);
@@ -138,8 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
     async function downloadExpensesAsCSV() {
       try {
-
-        const url = "http://localhost:5000/api/expenses?limit=999999";
+//13.235.74.23:http://localhost:5000/api/expenses?limit=999999
+        const url = "http://13.235.74.23/api/expenses?limit=999999";
         const response = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` }
         });

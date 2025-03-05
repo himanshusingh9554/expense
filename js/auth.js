@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        const url = isSignup ? "http://localhost:5000/api/auth/signup" : "http://localhost:5000/api/auth/login";
+        e.preventDefault();//http://localhost:5000/api/auth/signup:http://localhost:5000/api/auth/login
+        const url = isSignup ? "http://13.235.74.23/api/auth/signup" : "http://13.235.74.23/api/auth/login";
 
         const userData = {
             email: emailField.value,

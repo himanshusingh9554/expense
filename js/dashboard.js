@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function verifyPayment(orderId) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/orders/verifyPayment?order_id=${orderId}`,
+        `http://13.235.74.23/api/orders/verifyPayment?order_id=${orderId}`,
         {
           method: "GET",
           headers: {
@@ -125,8 +125,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   async function fetchUserName() {
-    try {
-      const response = await fetch("http://localhost:5000/api/user", {
+    try {//13.235.74.23:http://localhost:5000/api/user
+      const response = await fetch("http://13.235.74.23/api/user", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
@@ -164,8 +164,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Please log in first.");
         return;
       }
-
-      const response = await fetch("http://localhost:5000/api/orders/create", {
+//13.235.74.23:http://localhost:5000/api/orders/create
+      const response = await fetch("http://13.235.74.23/api/orders/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -195,8 +195,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function downloadExpenses() {
-    try {
-      const response = await fetch("http://localhost:5000/api/expenses/download", {
+    try {//13.235.74.23:http://localhost:5000/api/expenses/download
+      const response = await fetch("http://13.235.74.23/api/expenses/download", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
@@ -221,8 +221,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let transactionsData = [];
   async function fetchTransactions(filter = "all") {
-    try {
-      const url = `http://localhost:5000/api/expenses?page=${currentPage}&limit=${rowsPerPage}&filter=${filter}`;
+    try {//13.235.74.23:http://localhost:5000/api/expenses?page=${currentPage}&limit=${rowsPerPage}&filter=${filter}`
+      const url = `http://13.235.74.23/api/expenses?page=${currentPage}&limit=${rowsPerPage}&filter=${filter}`;
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -308,8 +308,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:5000/api/expenses", {
+    try {//13.235.74.23:http://localhost:5000/api/expenses
+      const response = await fetch("http://13.235.74.23/api/expenses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -330,8 +330,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function deleteTransaction(event) {
     const transactionId = event.target.dataset.id;
-    try {
-      const response = await fetch(`http://localhost:5000/api/expenses/${transactionId}`, {
+    try {//13.235.74.23:http://localhost:5000/api/expenses/${transactionId}
+      const response = await fetch(`http://13.235.74.23/api/expenses/${transactionId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -371,8 +371,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const updatedType = document.getElementById("edit-transaction-type").value;
       const updatedCategory = document.getElementById("edit-transaction-category").value;
 
-      try {
-        const response = await fetch(`http://localhost:5000/api/expenses/${transactionId}`, {
+      try {//13.235.74.23:http://localhost:5000/api/expenses/${transactionId}
+        const response = await fetch(`http://13.235.74.23/api/expenses/${transactionId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
